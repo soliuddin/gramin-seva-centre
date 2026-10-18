@@ -2,8 +2,8 @@
   "settings": {
     "name": "Gramin Seva Centre",
     "nameBn": "গ্রামীণ সেবা কেন্দ্র",
-    "proprietor": "Md Soliuddin",
-    "proprietorBn": "মোঃ সলিউদ্দিন",
+    "proprietor": "Soliuddin",
+    "proprietorBn": "সলিউদ্দিন",
     "phone": "9876543210",
     "whatsapp": "9876543210",
     "addressLine": "BERHAMPORE",
@@ -703,5 +703,5 @@
   ],
   "notices": [],
   "sections": [],
-  "updatedAt": "2026-10-18T17:04:06.842Z"
+  "updatedAt": "2026-10-18T17:08:37.611Z"
 }
