@@ -585,6 +585,15 @@
   /* ---------- start ---------- */
   function init() {
     applyStatic();
+    /* tapping a "Work we do for you" card shows that category's rates */
+    on($('#cards'), 'click', function (e) {
+      var b = e.target && e.target.closest ? e.target.closest('[data-card]') : null;
+      if (!b) return;
+      cat = b.getAttribute('data-card'); q = ''; if ($('#q')) $('#q').value = '';
+      renderList();
+      var target = $('#rates') || $('#list');
+      if (target) target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    });
     on($('#lang'), 'click', function () { lang = lang === 'bn' ? 'en' : 'bn'; store('gsc_lang', lang); if (D) renderAll(); else applyStatic(); });
     on($('#theme'), 'click', function () { setTheme(themeNow() === 'dark' ? 'light' : 'dark'); });
     on($('#q'), 'input', function (e) { q = e.target.value; if (D) renderList(); });
