@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /assets/icons.svg
+
+Sitemap: https://soliuddin.github.io/gramin-seva-centre/sitemap.xml
