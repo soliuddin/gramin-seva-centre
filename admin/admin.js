@@ -84,7 +84,7 @@
     return fetch('https://api.github.com' + path, {
       method: method,
       headers: { 'Authorization': 'Bearer ' + (token || S.token), 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'Content-Type': 'application/json' },
-      body: body ? JSON.stringify(body) : undefined, credentials: 'omit', referrerPolicy: 'no-referrer'
+      body: body ? JSON.stringify(body) : undefined, credentials: 'omit', referrerPolicy: 'no-referrer', cache: 'no-store'
     }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (j) {
         if (!r.ok) { var e = new Error(friendly(r.status, j && j.message)); e.status = r.status; throw e; }
