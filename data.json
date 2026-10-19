@@ -21,16 +21,16 @@
   },
   "categories": [
     {
-      "id": "schemes",
-      "name": "Government schemes",
-      "nameBn": "সরকারি প্রকল্প",
-      "icon": "schemes"
-    },
-    {
       "id": "identity",
       "name": "Aadhaar and ID cards",
       "nameBn": "আধার ও পরিচয়পত্র",
       "icon": "identity"
+    },
+    {
+      "id": "schemes",
+      "name": "Government schemes",
+      "nameBn": "সরকারি প্রকল্প",
+      "icon": "schemes"
     },
     {
       "id": "certs",
@@ -703,5 +703,5 @@
   ],
   "notices": [],
   "sections": [],
-  "updatedAt": "2026-10-18T17:08:37.611Z"
+  "updatedAt": "2026-10-19T02:13:20.719Z"
 }
