@@ -45,7 +45,7 @@ svg { display: block; }
 .progress { position: fixed; top: 0; left: 0; right: 0; height: 4px; z-index: 40; transform-origin: 0 50%; transform: scaleX(var(--p, 0)); background: linear-gradient(90deg, var(--brand-2), var(--mark), var(--clay)); pointer-events: none; }
 
 /* header */
-.top { position: sticky; top: 0; z-index: 30; background: color-mix(in srgb, var(--bg) 82%, transparent); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); border-bottom: 1px solid var(--line); transition: box-shadow .3s; }
+.top { position: sticky; top: 0; z-index: 30; background: color-mix(in srgb, var(--bg) 97%, transparent); border-bottom: 1px solid var(--line); transition: box-shadow .3s; }
 .top.stuck { box-shadow: 0 14px 30px -22px rgba(0, 0, 0, .5); }
 .top .wrap { display: flex; align-items: center; gap: 8px 14px; padding-block: 9px; }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-right: auto; min-width: 0; }
@@ -121,8 +121,8 @@ svg { display: block; }
 .hill-far { fill: var(--hill-a); opacity: .8; }
 .hill-near { fill: var(--hill-b); }
 .paddy { left: -4%; right: -4%; bottom: 0; height: 34%; transform: translate(calc(var(--px, 0) * 22px), calc(var(--py, 0) * 6px)); background: repeating-linear-gradient(172deg, var(--field-a) 0 22px, var(--field-b) 22px 44px); -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 28%); mask-image: linear-gradient(180deg, transparent 0, #000 28%); }
-.paddy::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 35%, rgba(255, 255, 220, .28) 50%, transparent 65%); background-size: 250% 100%; animation: wind 7s ease-in-out infinite; mix-blend-mode: soft-light; }
-@keyframes wind { from { background-position: 150% 0; } to { background-position: -150% 0; } }
+.paddy::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 35%, rgba(255, 255, 220, .28) 50%, transparent 65%); animation: wind-x 7s ease-in-out infinite; mix-blend-mode: soft-light; } will-change: transform;
+@keyframes wind-x { from { transform: translateX(-70%); } to { transform: translateX(70%); } }
 .palm { bottom: 14%; transform-origin: 50% 100%; animation: sway 6s ease-in-out infinite alternate; }
 .palm svg { width: 100%; height: auto; }
 .palm .fr { transform-origin: 50% 30%; animation: fronds 4s ease-in-out infinite alternate; }
@@ -181,6 +181,9 @@ svg { display: block; }
 /* ===== marquee band (kantha stitch look) ===== */
 .band { position: relative; overflow: hidden; background: var(--brand); color: var(--brand-ink); border-block: 3px dashed var(--mark); padding: 13px 0; font-family: var(--f-display); font-weight: 700; font-size: 20px; }
 .band .track { display: flex; width: max-content; animation: marquee 110s linear infinite; }
+.band .track, .tk-track { will-change: transform; }
+.band, .ticker { contain: paint; }
+.off .track, .off .tk-track { animation-play-state: paused !important; }
 .band:hover .track { animation-play-state: paused; }
 .band span { padding-inline: 22px; white-space: nowrap; display: inline-flex; align-items: center; gap: 44px; }
 .band span::after { content: "✦"; color: var(--mark); font-size: 16px; }
