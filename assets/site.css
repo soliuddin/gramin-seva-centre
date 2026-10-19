@@ -592,22 +592,27 @@ html { scrollbar-width: thin; scrollbar-color: var(--sb-a) transparent; }
 .callmenu[hidden] { display: none; }
 
 /* Small notice board in the hero (hidden when there are no notices) */
-.mini-board { position: relative; margin-top: 20px; width: min(540px, 100%); background: linear-gradient(160deg, var(--surface), color-mix(in srgb, var(--surface) 84%, var(--mark))); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow-1); overflow: hidden; }
-.mini-board::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: linear-gradient(var(--mark), var(--brand-2)); }
+.mini-board { position: relative; margin-top: 20px; width: min(540px, 100%); background: var(--surface); border: 1px solid var(--line); border-left: 0; border-radius: 14px; box-shadow: var(--shadow-1); overflow: hidden; }
+.mini-board::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--clay); }
 .mini-board[hidden] { display: none !important; }
-.mb-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 16px 11px 20px; border-bottom: 1px dashed var(--line); }
-.mb-live { display: inline-flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--brand); }
-.mb-live i { width: 9px; height: 9px; border-radius: 50%; background: var(--brand-2); animation: pulse 2s ease-out infinite; }
+.mb-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 16px 10px 20px; border-bottom: 1px dashed var(--line); }
+.mb-live { display: inline-flex; align-items: center; gap: 9px; font-size: 17px; font-weight: 800; color: var(--clay); }
+.mb-live i { display: none; }
 .mb-count { min-width: 28px; height: 24px; padding: 0 9px; border-radius: 99px; display: inline-grid; place-items: center; font-size: 13px; font-weight: 800; background: var(--mark); color: var(--mark-ink); }
-.mb-view { position: relative; height: 128px; overflow: hidden; margin: 0 16px 14px 20px; }
+.mb-view { position: relative; height: 150px; overflow: hidden; margin: 0 16px 14px 20px; }
 .mb-track { list-style: none; margin: 0; padding: 0; position: relative; height: 100%; }
-.mb-item { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 12px 14px; border-radius: 14px; background: color-mix(in srgb, var(--bg) 72%, transparent); border: 1px solid var(--line); font-size: 16px; line-height: 1.5; color: var(--ink); transform: translateY(110%); opacity: 0; transition: transform .7s cubic-bezier(.2, .8, .2, 1), opacity .5s ease; }
+.mb-item { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 6px; padding: 10px 16px 12px 20px; font-size: 16px; line-height: 1.5; color: var(--ink); transform: translateY(110%); opacity: 0; transition: transform .7s cubic-bezier(.2, .8, .2, 1), opacity .5s ease; overflow: hidden; }
 .mb-item.on { transform: none; opacity: 1; }
 .mb-item.out { transform: translateY(-110%); opacity: 0; }
-.mb-item.urg { border-color: var(--clay); background: var(--clay-soft); }
+.mb-item.urg { color: var(--ink); }
 .mb-tag { align-self: flex-start; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; padding: 2px 9px; border-radius: 99px; background: var(--clay); color: #fff; }
-.mb-text { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-@media (max-width: 899px) { .mini-board { width: 100%; } .mb-view { height: 136px; } }
+.mb-clip { flex: 1 1 auto; min-height: 0; overflow: hidden; }
+.mb-text { display: block; will-change: transform; }
+.mb-text::before { content: "•  "; color: var(--clay); font-weight: 800; }
+.mb-item.on .mb-text { animation: mb-scroll var(--mbs, 0s) linear 1s both; }
+.mini-board:hover .mb-text, .mini-board:active .mb-text { animation-play-state: paused; }
+@keyframes mb-scroll { to { transform: translateY(calc(var(--mbo, 0) * -1px)); } }
+@media (max-width: 899px) { .mini-board { width: 100%; } .mb-view { height: 150px; } }
 
 /* Bottom bar call menu opens upward */
 .dock-call > .btn { width: 100%; }
