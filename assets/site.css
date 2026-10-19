@@ -421,7 +421,7 @@ footer .fbottom a { color: inherit; font-weight: 700; text-decoration: none; bor
   .facts { grid-template-columns: minmax(0, 1fr); }
   .menu { padding: 14px; }
   .item .nm { max-width: 56%; }
-  .callbtn, .nav { display: none; }
+  .nav { display: none; }
   .brand-t small { display: none; }
   .brand-t b { font-size: 17px; }
   .mark { width: 38px; height: 38px; }
@@ -564,3 +564,12 @@ html { scrollbar-width: thin; scrollbar-color: var(--sb-a) transparent; }
 ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--sb-a), var(--sb-b)); border-radius: 99px; border: 3px solid transparent; background-clip: padding-box; }
 ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, var(--sb-b), var(--sb-a)); background-clip: padding-box; }
 ::-webkit-scrollbar-corner { background: transparent; }
+
+/* Header call menu: Call now and Call back */
+.callwrap { position: relative; }
+.callbtn { border: 0; cursor: pointer; font: inherit; white-space: nowrap; flex: none; }
+.callmenu { position: absolute; right: 0; top: calc(100% + 10px); min-width: 220px; display: grid; gap: 4px; padding: 8px; background: var(--surface); border: 2px solid var(--line); border-radius: 16px; box-shadow: var(--shadow-2); z-index: 60; }
+.callmenu a { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 12px; color: var(--ink); text-decoration: none; font-weight: 700; }
+.callmenu a svg { width: 18px; height: 18px; color: var(--brand); flex: none; }
+.callmenu a:hover, .callmenu a:focus-visible { background: var(--brand-soft); outline: none; }
+.callmenu[hidden] { display: none; }
