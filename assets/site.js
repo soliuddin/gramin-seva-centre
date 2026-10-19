@@ -261,7 +261,7 @@
     setAttr('#v-dir', 'href', 'https://www.google.com/maps/dir/?api=1&destination=' + enc);
     setMap(qq);
     var hasPhone = !!tel(s.phone), hasWa = !!wa(s.whatsapp);
-    show('#bd-phone-row', hasPhone); show('#v-phone-box', hasPhone); show('#top-call', hasPhone);
+    show('#bd-phone-row', hasPhone); show('#v-phone-box', hasPhone); show('#top-call-wrap', hasPhone);
     if (hasPhone) {
       setText('#bd-phone', s.phone); setText('#v-phone', s.phone);
       ['#v-phone', '#d-call', '#top-call'].forEach(function (id) { setAttr(id, 'href', 'tel:' + tel(s.phone)); });
@@ -594,6 +594,16 @@
       var target = $('#rates') || $('#list');
       if (target) target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
     });
+    /* header call button: opens a small menu with Call now and Call back */
+    function closeCallMenu() { var m = $('#call-menu'), b = $('#top-call-btn'); if (m) m.hidden = true; if (b) b.setAttribute('aria-expanded', 'false'); }
+    on($('#top-call-btn'), 'click', function (e) {
+      e.stopPropagation();
+      var m = $('#call-menu'); if (!m) return;
+      var open = m.hidden; m.hidden = !open; this.setAttribute('aria-expanded', String(open));
+      if (open) { var first = m.querySelector('a'); if (first) first.focus(); }
+    });
+    on(document, 'click', function (e) { if (!e.target.closest || !e.target.closest('#top-call-wrap')) closeCallMenu(); });
+    on(document, 'keydown', function (e) { if (e.key === 'Escape') { var b = $('#top-call-btn'); if (b && $('#call-menu') && !$('#call-menu').hidden) { closeCallMenu(); b.focus(); } } });
     on($('#lang'), 'click', function () { lang = lang === 'bn' ? 'en' : 'bn'; store('gsc_lang', lang); if (D) renderAll(); else applyStatic(); });
     on($('#theme'), 'click', function () { setTheme(themeNow() === 'dark' ? 'light' : 'dark'); });
     on($('#q'), 'input', function (e) { q = e.target.value; if (D) renderList(); });
