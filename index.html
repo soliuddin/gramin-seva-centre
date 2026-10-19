@@ -68,7 +68,13 @@
       <a href="#contact" data-i="nav_contact"></a>
       <a href="feedback.html" data-i="nav_feedback"></a>
     </nav>
-    <a class="callbtn" id="top-call" href="#contact" hidden><svg aria-hidden="true"><use href="#i-phone"/></svg><span data-i="d_call"></span></a>
+    <div class="callwrap" id="top-call-wrap" hidden>
+      <button type="button" class="callbtn" id="top-call-btn" aria-haspopup="true" aria-expanded="false" aria-controls="call-menu"><svg aria-hidden="true"><use href="#i-phone"/></svg><span data-i="d_call"></span></button>
+      <div class="callmenu" id="call-menu" role="menu" hidden>
+        <a role="menuitem" id="top-call" href="#contact"><svg aria-hidden="true"><use href="#i-phone"/></svg><span data-i="d_call"></span></a>
+        <a role="menuitem" href="callback.html"><svg aria-hidden="true"><use href="#i-phone"/></svg><span data-i="cb_fab"></span></a>
+      </div>
+    </div>
     <button type="button" class="ibtn" id="lang" aria-label="Change language">English</button>
     <button type="button" class="ibtn theme" id="theme" aria-label="Switch to dark mode"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
   </div>
@@ -275,7 +281,6 @@
 </footer>
 
 <div class="fabs">
-  <a class="fab cb" href="callback.html" aria-label="Call back"><svg aria-hidden="true"><use href="#i-phone"/></svg><span class="fab-t" data-i="cb_fab"></span></a>
   <a class="fab wa" id="fab-wa" target="_blank" rel="noopener" aria-label="WhatsApp" hidden><svg aria-hidden="true"><use href="#i-wa"/></svg></a>
   <button type="button" class="fab up" id="to-top" aria-label="Back to top">
     <svg class="ring" viewBox="0 0 58 58" aria-hidden="true"><circle class="tr" cx="29" cy="29" r="26"/><circle class="pg" cx="29" cy="29" r="26"/></svg>
