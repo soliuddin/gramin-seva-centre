@@ -554,3 +554,13 @@ footer .fbottom a { color: inherit; font-weight: 700; text-decoration: none; bor
   .facts { grid-template-columns: minmax(0, 1fr); }
 }
 .cb-split .cbcard #cb-form-wrap > h3, .cb-split .cbcard #cb-form-wrap > .hint { display: none; }
+
+/* Modern thin scrollbars (site) */
+:root { --sb-a: #3FA34D; --sb-b: #1F7A4D; }
+:root[data-theme="dark"] { --sb-a: #86E0A8; --sb-b: #55C98A; }
+html { scrollbar-width: thin; scrollbar-color: var(--sb-a) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--sb-a), var(--sb-b)); border-radius: 99px; border: 3px solid transparent; background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, var(--sb-b), var(--sb-a)); background-clip: padding-box; }
+::-webkit-scrollbar-corner { background: transparent; }
