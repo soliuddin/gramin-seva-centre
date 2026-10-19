@@ -1,7 +1,7 @@
 /* Staff console: futuristic glass theme. Same classes and layout as before; only the look changed.
    Mobile first: the side menu becomes a top bar on phones. */
 :root {
-  --bg: #EEF3FB; --card: rgba(255, 255, 255, .8); --side: #0B1222; --side2: #111B33; --sideink: #9FB2D6;
+  --bg: #E6EDF8; --card: rgba(255, 255, 255, .6); --panel: #FFFFFF; --side: #0B1222; --side2: #111B33; --sideink: #9FB2D6;
   --ink: #0B1222; --ink2: #5B6B8A; --line: rgba(15, 23, 42, .1); --soft: rgba(15, 23, 42, .03);
   --acc: #0E7490; --acc2: #6D28D9; --accsoft: rgba(14, 116, 144, .1);
   --ok: #047857; --oksoft: rgba(4, 120, 87, .1); --warn: #B45309; --warnsoft: rgba(180, 83, 9, .1);
@@ -11,7 +11,7 @@
   color-scheme: light;
 }
 [data-theme="dark"] {
-  --bg: #050814; --card: rgba(15, 23, 42, .62); --side: rgba(6, 10, 22, .9); --side2: rgba(12, 18, 36, .9); --sideink: #8BA3C7;
+  --bg: #050814; --card: rgba(15, 23, 42, .62); --panel: #0F172A; --side: rgba(6, 10, 22, .9); --side2: rgba(12, 18, 36, .9); --sideink: #8BA3C7;
   --ink: #E6F1FF; --ink2: #8BA3C7; --line: rgba(120, 160, 255, .14); --soft: rgba(255, 255, 255, .03);
   --acc: #22D3EE; --acc2: #A855F7; --accsoft: rgba(34, 211, 238, .12);
   --ok: #34D399; --oksoft: rgba(52, 211, 153, .12); --warn: #FBBF24; --warnsoft: rgba(251, 191, 36, .12);
@@ -152,6 +152,8 @@ input[type=text], input[type=password], input[type=number], input[type=date], in
 }
 [data-theme="dark"] input[type=text], [data-theme="dark"] input[type=password], [data-theme="dark"] input[type=number], [data-theme="dark"] input[type=date], [data-theme="dark"] input[type=search], [data-theme="dark"] input[type=url], [data-theme="dark"] input[type=tel], [data-theme="dark"] input[type=email], [data-theme="dark"] select, [data-theme="dark"] textarea { background: rgba(255, 255, 255, .03); }
 textarea { min-height: 80px; resize: vertical; }
+select { background-color: var(--panel); }
+select option, select optgroup { background-color: var(--panel); color: var(--ink); }
 input:focus, select:focus, textarea:focus { outline: none; border-color: var(--acc); box-shadow: 0 0 0 4px var(--accsoft), 0 0 22px -8px var(--acc); }
 .grid2 { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 14px; }
 .err { color: var(--bad); font-size: 13.5px; min-height: 20px; margin-bottom: 6px; font-weight: 600; }
