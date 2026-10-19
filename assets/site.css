@@ -466,10 +466,10 @@ footer .fbottom a { color: inherit; font-weight: 700; text-decoration: none; bor
 
 /* feedback */
 .fbl { display: block; font-weight: 700; font-size: 15px; margin-bottom: 4px; }
-.stars { display: flex; gap: 6px; }
-.stars button { border: 0; background: none; font-size: 34px; line-height: 1; color: var(--line); cursor: pointer; padding: 0 2px; transition: transform .15s, color .15s; }
-.stars button.on { color: var(--mark); }
-.stars button:hover { transform: scale(1.15); }
+.rate-stars { display: flex; gap: 6px; }
+.rate-stars button { border: 0; background: none; font-size: 34px; line-height: 1; color: var(--line); cursor: pointer; padding: 0 2px; transition: transform .15s, color .15s; }
+.rate-stars button.on { color: var(--mark); }
+.rate-stars button:hover { transform: scale(1.15); }
 .msg-ok { color: var(--brand); }
 
 /* rates: sticky category bar and clearer groups */
@@ -514,8 +514,8 @@ footer .fbottom a { color: inherit; font-weight: 700; text-decoration: none; bor
   .group h3 { font-size: 21px; }
 }
 /* feedback stars: clearly visible on light and dark backgrounds */
-.stars button { color: color-mix(in srgb, var(--ink-2) 55%, transparent); font-size: 40px; }
-.stars button.on, .stars button[aria-checked="true"] { color: var(--mark); }
+.rate-stars button { color: color-mix(in srgb, var(--ink-2) 55%, transparent); font-size: 40px; }
+.rate-stars button.on, .stars button[aria-checked="true"] { color: var(--mark); }
 .fbl { color: var(--ink); margin-bottom: 8px; }
 /* leave room above the phone contact bar on the sub-pages */
 @media (max-width: 899px) { .sub-page { padding-bottom: 96px; } }
