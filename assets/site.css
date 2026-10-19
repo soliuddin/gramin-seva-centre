@@ -608,8 +608,9 @@ html { scrollbar-width: thin; scrollbar-color: var(--sb-a) transparent; }
 @keyframes mb-up { from { transform: translateY(0); } to { transform: translateY(-50%); } }
 .mb-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px 0; font-size: 16px; line-height: 1.6; color: var(--ink); border-bottom: 1px dashed var(--line); }
 .mb-item::before { content: ""; flex: none; width: 9px; height: 9px; margin-top: 9px; border-radius: 50%; background: var(--brand-2); }
-.mb-item.urg::before { background: var(--clay); }
-.mb-tag { flex: none; margin-top: 2px; font-family: var(--f-mono); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: 2px 9px; border-radius: 99px; background: var(--clay); color: #fff; }
+.mb-item.urg { flex-direction: column; align-items: stretch; gap: 8px; }
+.mb-item.urg::before { display: none; }
+.mb-tag { flex: none; align-self: flex-start; margin-top: 2px; font-family: var(--f-mono); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: 2px 9px; border-radius: 99px; background: var(--clay); color: #fff; }
 .mb-text { min-width: 0; }
 @media (max-width: 899px) { .mini-board { width: 100%; } .mb-view { height: 160px; } }
 
