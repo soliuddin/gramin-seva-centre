@@ -87,7 +87,7 @@
       "catId": "identity",
       "name": "Aadhaar update (name, address, date of birth, mobile)",
       "nameBn": "আধার সংশোধন (নাম, ঠিকানা, জন্মতারিখ, মোবাইল)",
-      "price": 100
+      "price": 500
     },
     {
       "note": "",
@@ -113,7 +113,7 @@
       "catId": "identity",
       "name": "New PAN card application",
       "nameBn": "নতুন প্যান কার্ডের আবেদন",
-      "price": 150
+      "price": 200
     },
     {
       "note": "",
@@ -126,7 +126,7 @@
       "catId": "identity",
       "name": "PAN correction or reprint",
       "nameBn": "প্যান কার্ড সংশোধন বা নতুন কপি",
-      "price": 150
+      "price": 197
     },
     {
       "note": "",
@@ -139,7 +139,7 @@
       "catId": "identity",
       "name": "Voter card, new or correction",
       "nameBn": "ভোটার কার্ড নতুন বা সংশোধন",
-      "price": 60
+      "price": 100
     },
     {
       "note": "",
@@ -163,9 +163,9 @@
       "custom": false,
       "id": "s7seed",
       "catId": "schemes",
-      "name": "Lakshmir Bhandar form",
-      "nameBn": "লক্ষ্মীর ভান্ডার ফর্ম",
-      "price": 50
+      "name": "Annapurna Bhandar",
+      "nameBn": "অন্নপূর্ণা ভান্ডার ফর্ম",
+      "price": 100
     },
     {
       "note": "",
@@ -204,7 +204,7 @@
       "catId": "schemes",
       "name": "Kanyashree form",
       "nameBn": "কন্যাশ্রী ফর্ম",
-      "price": 50
+      "price": 100
     },
     {
       "note": "",
@@ -217,7 +217,7 @@
       "catId": "schemes",
       "name": "e-Shram card",
       "nameBn": "ই-শ্রম কার্ড",
-      "price": 50
+      "price": 100
     },
     {
       "note": "",
@@ -230,7 +230,7 @@
       "catId": "schemes",
       "name": "Ayushman Bharat card",
       "nameBn": "আয়ুষ্মান ভারত কার্ড",
-      "price": 50
+      "price": 99
     },
     {
       "note": "",
@@ -703,5 +703,5 @@
   ],
   "notices": [],
   "sections": [],
-  "updatedAt": "2026-10-19T02:13:20.719Z"
+  "updatedAt": "2026-10-19T02:19:11.637Z"
 }
