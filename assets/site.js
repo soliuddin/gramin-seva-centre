@@ -625,7 +625,7 @@
       if (prog) prog.style.setProperty('--p', p.toFixed(4));
       if (tu) { tu.style.setProperty('--p', p.toFixed(4)); tu.classList.toggle('on', window.scrollY > 520); }
       if (top) top.classList.toggle('stuck', window.scrollY > 8);
-      if (scene && !reduce && window.scrollY < 900) scene.style.setProperty('--sy', window.scrollY);
+      if (scene && !reduce && !window.matchMedia('(max-width: 900px)').matches && window.scrollY < 900) scene.style.setProperty('--sy', window.scrollY);
     });
   }
 
@@ -687,7 +687,8 @@
       this.setAttribute('aria-pressed', on2); var n = $('#notice'); if (n) n.classList.toggle('paused', on2);
     });
     var rz = null;
-    window.addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(function () { layoutTicker(); onScroll(); }, 250); });
+    var lastW = window.innerWidth;
+    window.addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(function () { if (window.innerWidth === lastW) return; lastW = window.innerWidth; layoutTicker(); onScroll(); }, 250); });
     window.addEventListener('scroll', onScroll, { passive: true });
     if (fine && !reduce) {
       document.addEventListener('pointermove', onMove, { passive: true });
@@ -703,6 +704,11 @@
     } else { statsSeen = true; mapVisible = true; }
 
     $all('.rv').forEach(watch);
+    if ('IntersectionObserver' in window) {
+      $all('.band, #notice').forEach(function (el) {
+        new IntersectionObserver(function (es) { es.forEach(function (e) { el.classList.toggle('off', !e.isIntersecting); }); }).observe(el);
+      });
+    }
     makeMotes();
     onScroll();
     if (window.GSCFB) startLive(); else { window.addEventListener('gsc:fb-ready', startLive, { once: true }); loadFb(); }
