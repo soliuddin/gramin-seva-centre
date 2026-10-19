@@ -317,6 +317,7 @@
      continuously and loops, like the eDistrict notice panel. Hovering or touching the board pauses it. */
   function renderMini(list) {
     var box = $('#mini-board'), track = $('#mini-track'); if (!box || !track) return;
+    var old = $('#mini-count'); if (old) old.textContent = '';
     box.hidden = !list.length;
     box.classList.remove('scroll', 'fit');
     if (!list.length) { track.innerHTML = ''; return; }
