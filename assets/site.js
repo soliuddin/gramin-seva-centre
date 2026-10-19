@@ -210,8 +210,10 @@
     var seg = location.pathname.split('/').filter(Boolean)[0];
     return seg ? h.split('.')[0] + '/' + seg : '';
   }
-  function fromPages() {
-    return fetch('data.json?t=' + Date.now(), { cache: 'no-store', credentials: 'omit' }).then(function (r) { if (!r.ok) throw new Error('http'); return r.text(); });
+  function fromPages(first) {
+    // The first load may use the browser cache; later checks always ask for a fresh copy.
+    var req = first ? fetch('data.json', { credentials: 'omit' }) : fetch('data.json?t=' + Date.now(), { cache: 'no-store', credentials: 'omit' });
+    return req.then(function (r) { if (!r.ok) throw new Error('http'); return r.text(); });
   }
   /* After the first load, read the copy in the GitHub repository, so a new publish shows within seconds
      rather than waiting for GitHub Pages to rebuild. If that fails, use the normal file. */
@@ -267,8 +269,8 @@
       ['#v-phone', '#d-call', '#top-call'].forEach(function (id) { setAttr(id, 'href', 'tel:' + tel(s.phone)); });
     }
     var link = hasWa ? waLink(t('wa_text')) : '';
-    ['#cta-wa', '#v-wa', '#d-wa', '#fab-wa'].forEach(function (id) { show(id, hasWa); if (hasWa) setAttr(id, 'href', link); });
-    show('#dock', hasPhone || hasWa); show('#d-call', hasPhone); show('#d-wa', hasWa);
+    ['#cta-wa', '#v-wa', '#d-wa'].forEach(function (id) { show(id, hasWa); if (hasWa) setAttr(id, 'href', link); });
+    show('#dock', hasPhone || hasWa); show('#d-call-wrap', hasPhone); show('#d-wa', hasWa);
     updateCbButton(); refreshCbState();
   }
   function refreshCbState() {
@@ -308,8 +310,16 @@
     track.style.setProperty('--tk-dur', Math.max(14, (w * n) / 62).toFixed(1) + 's');
     void track.offsetWidth; track.style.animation = '';
   }
+  /* small notice board in the hero: shown only when there are live notices */
+  function renderMini(list) {
+    var box = $('#mini-board'), ul = $('#mini-list'); if (!box || !ul) return;
+    box.hidden = !list.length;
+    ul.innerHTML = list.slice(0, 3).map(function (n) {
+      return '<li class="' + (n.level === 'urgent' ? 'urg' : '') + '">' + esc(pick(n.text, n.textBn)) + '</li>';
+    }).join('');
+  }
   function renderNotices() {
-    var list = D ? visibleNotices() : [], el = $('#notice');
+    var list = D ? visibleNotices() : [], el = $('#notice'); renderMini(list);
     if (el) {
       if (!list.length) { el.hidden = true; tkItems = []; }
       else {
@@ -523,7 +533,7 @@
   }
   function load(first) {
     var s = D && D.settings;
-    var src = (!first && !isLocal && s) ? fromLive(s) : fromPages();
+    var src = (!first && !isLocal && s) ? fromLive(s) : fromPages(first);
     return src.then(function (txt) {
       if (txt === lastJson) return;
       var nd = parseData(txt);
@@ -533,6 +543,12 @@
     }).catch(function () {
       if (first) { var l = $('#list'); if (l) l.innerHTML = '<p class="empty">' + esc(t('none')) + '</p>'; }
     });
+  }
+
+  /* The live-notice library is large, so it loads only after the page has finished loading. */
+  function loadFb() {
+    var go = function () { setTimeout(function () { import('./fb.js').catch(function () { }); }, 1200); };
+    if (document.readyState === 'complete') go(); else window.addEventListener('load', go, { once: true });
   }
 
   /* ---------- motion (guarded: every element is optional) ---------- */
@@ -594,16 +610,24 @@
       var target = $('#rates') || $('#list');
       if (target) target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
     });
-    /* header call button: opens a small menu with Call now and Call back */
-    function closeCallMenu() { var m = $('#call-menu'), b = $('#top-call-btn'); if (m) m.hidden = true; if (b) b.setAttribute('aria-expanded', 'false'); }
-    on($('#top-call-btn'), 'click', function (e) {
-      e.stopPropagation();
-      var m = $('#call-menu'); if (!m) return;
-      var open = m.hidden; m.hidden = !open; this.setAttribute('aria-expanded', String(open));
-      if (open) { var first = m.querySelector('a'); if (first) first.focus(); }
+    /* call menus: the header button and the bottom bar button each open Call now / Call back */
+    var CALL_MENUS = [['#top-call-btn', '#call-menu'], ['#d-call-btn', '#dock-menu']];
+    function closeCallMenus(except) {
+      CALL_MENUS.forEach(function (x) {
+        if (x[1] === except) return;
+        var m = $(x[1]), b = $(x[0]); if (m) m.hidden = true; if (b) b.setAttribute('aria-expanded', 'false');
+      });
+    }
+    CALL_MENUS.forEach(function (x) {
+      on($(x[0]), 'click', function (e) {
+        e.stopPropagation();
+        var m = $(x[1]); if (!m) return;
+        var open = m.hidden; closeCallMenus(x[1]); m.hidden = !open; this.setAttribute('aria-expanded', String(open));
+        if (open) { var first = m.querySelector('a'); if (first) first.focus(); }
+      });
     });
-    on(document, 'click', function (e) { if (!e.target.closest || !e.target.closest('#top-call-wrap')) closeCallMenu(); });
-    on(document, 'keydown', function (e) { if (e.key === 'Escape') { var b = $('#top-call-btn'); if (b && $('#call-menu') && !$('#call-menu').hidden) { closeCallMenu(); b.focus(); } } });
+    on(document, 'click', function (e) { if (!e.target.closest || !e.target.closest('.callwrap')) closeCallMenus(); });
+    on(document, 'keydown', function (e) { if (e.key === 'Escape') closeCallMenus(); });
     on($('#lang'), 'click', function () { lang = lang === 'bn' ? 'en' : 'bn'; store('gsc_lang', lang); if (D) renderAll(); else applyStatic(); });
     on($('#theme'), 'click', function () { setTheme(themeNow() === 'dark' ? 'light' : 'dark'); });
     on($('#q'), 'input', function (e) { q = e.target.value; if (D) renderList(); });
@@ -635,9 +659,10 @@
     $all('.rv').forEach(watch);
     makeMotes();
     onScroll();
-    if (window.GSCFB) startLive(); else window.addEventListener('gsc:fb-ready', startLive, { once: true });
+    if (window.GSCFB) startLive(); else { window.addEventListener('gsc:fb-ready', startLive, { once: true }); loadFb(); }
     load(true);
-    setInterval(function () { if (!document.hidden) load(false); }, POLL_MS);
+    var phone = !!(window.matchMedia && window.matchMedia('(max-width: 640px)').matches);
+    setInterval(function () { if (!document.hidden) load(false); }, phone ? POLL_MS * 3 : POLL_MS);
     document.addEventListener('visibilitychange', function () { if (!document.hidden && D) load(false); });
     // Safety net: anything still hidden after 3 seconds is shown, so no section can stay blank.
     setTimeout(function () { $all('.rv').forEach(function (el) { el.classList.add('in'); }); }, 3000);
