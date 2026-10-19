@@ -55,7 +55,7 @@
       why1_t: 'Clear prices', why1_p: 'The rate list is open for everyone. Ask about anything you do not understand.',
       why2_t: 'In your own language', why2_p: 'We explain every step in simple Bengali or English.',
       why3_t: 'One counter', why3_p: 'Aadhaar, PAN, forms, bills and printing in one place.',
-      notices_e: 'From the counter', notices_h: 'Notice board', notice_label: 'Notice', notice_urgent: 'Urgent', tk_pause: 'Pause or play notices',
+      notices_e: 'From the counter', notices_h: 'Important Announcements', notice_label: 'Notice', notice_urgent: 'Urgent', tk_pause: 'Pause or play notices',
       visit_e: 'Find us', visit_h: 'Visit our centre', visit_p: 'See us on the map, call, message on WhatsApp, or ask for a call back.',
       map_wait: 'The map is loading. If it does not appear, use the buttons below.', map_dir: 'Get directions', map_open: 'Open in Google Maps', wa_btn: 'Message on WhatsApp',
       cb_h: 'Ask for a call back', cb_p: 'Leave your number and the work you need. We will call you.',
@@ -104,7 +104,7 @@
       why1_t: 'স্পষ্ট দাম', why1_p: 'দামের তালিকা সবার জন্য খোলা। যা বুঝতে পারছেন না, জিজ্ঞাসা করুন।',
       why2_t: 'নিজের ভাষায়', why2_p: 'প্রতিটি ধাপ সহজ বাংলা বা ইংরেজিতে বুঝিয়ে দিই।',
       why3_t: 'এক ছাদের নিচে', why3_p: 'আধার, প্যান, ফর্ম, বিল আর প্রিন্ট এক জায়গায়।',
-      notices_e: 'কাউন্টার থেকে', notices_h: 'নোটিশ বোর্ড', notice_label: 'নোটিশ', notice_urgent: 'জরুরি', tk_pause: 'নোটিশ থামান বা চালান',
+      notices_e: 'কাউন্টার থেকে', notices_h: 'গুরুত্বপূর্ণ ঘোষণা', notice_label: 'নোটিশ', notice_urgent: 'জরুরি', tk_pause: 'নোটিশ থামান বা চালান',
       visit_e: 'আমাদের খুঁজে নিন', visit_h: 'আমাদের কেন্দ্রে আসুন', visit_p: 'ম্যাপে দেখুন, ফোন করুন, হোয়াটসঅ্যাপে মেসেজ করুন, বা ফোন করতে বলুন।',
       map_wait: 'ম্যাপ লোড হচ্ছে। না এলে নিচের বোতাম ব্যবহার করুন।', map_dir: 'রাস্তা দেখুন', map_open: 'গুগল ম্যাপে খুলুন', wa_btn: 'হোয়াটসঅ্যাপে মেসেজ করুন',
       cb_h: 'ফোন করতে বলুন', cb_p: 'আপনার নম্বর আর কী কাজ লাগবে লিখে দিন। আমরা ফোন করব।',
@@ -316,15 +316,22 @@
   var mbTimer = null, mbBound = false, mbHold = false;
   function renderMini(list) {
     var box = $('#mini-board'), track = $('#mini-track'), cnt = $('#mini-count'); if (!box || !track) return;
-    if (mbTimer) { clearInterval(mbTimer); mbTimer = null; }
+    if (mbTimer) { clearTimeout(mbTimer); mbTimer = null; }
     box.hidden = !list.length;
     if (!list.length) { track.innerHTML = ''; if (cnt) cnt.textContent = '0'; return; }
     track.innerHTML = list.map(function (n) {
       var urg = n.level === 'urgent';
       return '<li class="mb-item' + (urg ? ' urg' : '') + '">' + (urg ? '<span class="mb-tag">' + esc(t('notice_urgent')) + '</span>' : '') +
-        '<span class="mb-text">' + esc(pick(n.text, n.textBn)) + '</span></li>';
+        '<div class="mb-clip"><span class="mb-text">' + esc(pick(n.text, n.textBn)) + '</span></div></li>';
     }).join('');
     var items = $all('#mini-track .mb-item'), cur = 0;
+    /* A long notice scrolls up inside its panel so every line can be read; the wait is extended to match. */
+    var extra = items.map(function (it) {
+      var clip = it.querySelector('.mb-clip'), o = clip ? Math.max(0, Math.ceil(clip.scrollHeight - clip.clientHeight)) : 0;
+      it.style.setProperty('--mbo', String(o));
+      it.style.setProperty('--mbs', o ? (o / 40).toFixed(2) + 's' : '0s');
+      return o ? o / 40 * 1000 + 1200 : 0;
+    });
     function show(i) { if (cnt) cnt.textContent = (i + 1) + ' / ' + items.length; }
     items[0].classList.add('on');
     show(0);
@@ -335,19 +342,26 @@
       on(box, 'pointerdown', function () { mbHold = true; });
       on(box, 'pointerup', function () { setTimeout(function () { mbHold = false; }, 1500); });
     }
-    if (items.length < 2 || reduce) return;
-    mbTimer = setInterval(function () {
-      if (document.hidden || mbHold) return;
-      var prev = items[cur];
-      prev.classList.remove('on'); prev.classList.add('out');
-      cur = (cur + 1) % items.length;
-      var nx = items[cur];
-      nx.style.transition = 'none'; nx.classList.remove('out');
-      void nx.offsetWidth;
-      nx.style.transition = '';
-      nx.classList.add('on');
-      show(cur);
-    }, 4500);
+    if (reduce || (items.length < 2 && !extra[0])) return;
+    function step() {
+      if (document.hidden || mbHold) { mbTimer = setTimeout(step, 400); return; }
+      if (items.length > 1) {
+        var prev = items[cur];
+        prev.classList.remove('on'); prev.classList.add('out');
+        cur = (cur + 1) % items.length;
+        var nx = items[cur];
+        nx.style.transition = 'none'; nx.classList.remove('out');
+        void nx.offsetWidth;
+        nx.style.transition = '';
+        nx.classList.add('on');
+        show(cur);
+      } else {
+        var tx = items[0].querySelector('.mb-text');
+        if (tx) { tx.style.animation = 'none'; void tx.offsetWidth; tx.style.animation = ''; }
+      }
+      mbTimer = setTimeout(step, 4500 + extra[cur]);
+    }
+    mbTimer = setTimeout(step, 4500 + extra[0]);
   }
   function renderNotices() {
     var list = D ? visibleNotices() : [], el = $('#notice'); renderMini(list);
