@@ -313,55 +313,28 @@
   /* small notice board in the hero: shown only when there are live notices */
   /* Notice board (hero): one notice at a time. Each notice rises from below, holds, moves up and out,
      then the next one comes in, and the list repeats. Holding or touching the board pauses it. */
-  var mbTimer = null, mbBound = false, mbHold = false;
+  /* Important Announcements board (hero): every notice is listed, and the list scrolls upward
+     continuously and loops, like the eDistrict notice panel. Hovering or touching the board pauses it. */
   function renderMini(list) {
-    var box = $('#mini-board'), track = $('#mini-track'), cnt = $('#mini-count'); if (!box || !track) return;
-    if (mbTimer) { clearTimeout(mbTimer); mbTimer = null; }
+    var box = $('#mini-board'), track = $('#mini-track'); if (!box || !track) return;
     box.hidden = !list.length;
-    if (!list.length) { track.innerHTML = ''; if (cnt) cnt.textContent = '0'; return; }
-    track.innerHTML = list.map(function (n) {
+    box.classList.remove('scroll', 'fit');
+    if (!list.length) { track.innerHTML = ''; return; }
+    var one = list.map(function (n) {
       var urg = n.level === 'urgent';
       return '<li class="mb-item' + (urg ? ' urg' : '') + '">' + (urg ? '<span class="mb-tag">' + esc(t('notice_urgent')) + '</span>' : '') +
-        '<div class="mb-clip"><span class="mb-text">' + esc(pick(n.text, n.textBn)) + '</span></div></li>';
+        '<span class="mb-text">' + esc(pick(n.text, n.textBn)) + '</span></li>';
     }).join('');
-    var items = $all('#mini-track .mb-item'), cur = 0;
-    /* A long notice scrolls up inside its panel so every line can be read; the wait is extended to match. */
-    var extra = items.map(function (it) {
-      var clip = it.querySelector('.mb-clip'), o = clip ? Math.max(0, Math.ceil(clip.scrollHeight - clip.clientHeight)) : 0;
-      it.style.setProperty('--mbo', String(o));
-      it.style.setProperty('--mbs', o ? (o / 40).toFixed(2) + 's' : '0s');
-      return o ? o / 40 * 1000 + 1200 : 0;
-    });
-    function show(i) { if (cnt) cnt.textContent = (i + 1) + ' / ' + items.length; }
-    items[0].classList.add('on');
-    show(0);
-    if (!mbBound) {
-      mbBound = true;
-      on(box, 'pointerenter', function () { mbHold = true; });
-      on(box, 'pointerleave', function () { mbHold = false; });
-      on(box, 'pointerdown', function () { mbHold = true; });
-      on(box, 'pointerup', function () { setTimeout(function () { mbHold = false; }, 1500); });
+    track.innerHTML = one;
+    var view = box.querySelector('.mb-view');
+    var h = track.offsetHeight;
+    if (!reduce && view && h > view.clientHeight) {
+      track.innerHTML = one + one; /* two identical copies make the loop seamless */
+      track.style.setProperty('--mb-dur', Math.max(10, h / 30).toFixed(1) + 's');
+      box.classList.add('scroll');
+    } else {
+      box.classList.add('fit'); /* short list: shown in full, no scrolling */
     }
-    if (reduce || (items.length < 2 && !extra[0])) return;
-    function step() {
-      if (document.hidden || mbHold) { mbTimer = setTimeout(step, 400); return; }
-      if (items.length > 1) {
-        var prev = items[cur];
-        prev.classList.remove('on'); prev.classList.add('out');
-        cur = (cur + 1) % items.length;
-        var nx = items[cur];
-        nx.style.transition = 'none'; nx.classList.remove('out');
-        void nx.offsetWidth;
-        nx.style.transition = '';
-        nx.classList.add('on');
-        show(cur);
-      } else {
-        var tx = items[0].querySelector('.mb-text');
-        if (tx) { tx.style.animation = 'none'; void tx.offsetWidth; tx.style.animation = ''; }
-      }
-      mbTimer = setTimeout(step, 4500 + extra[cur]);
-    }
-    mbTimer = setTimeout(step, 4500 + extra[0]);
   }
   function renderNotices() {
     var list = D ? visibleNotices() : [], el = $('#notice'); renderMini(list);
