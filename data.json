@@ -14,7 +14,7 @@
     "hours": "9:00 AM to 8:00 PM",
     "hoursBn": "সকাল ৯টা থেকে রাত ৮টা",
     "mapQuery": "24.08998, 88.251001",
-    "formEndpoint": "",
+    "formEndpoint": "https://formspree.io/f/xdeajjez",
     "defaultLang": "en",
     "siteUrl": "https://soliuddin.github.io/gramin-seva-centre/",
     "liveBranch": "main"
@@ -703,5 +703,5 @@
   ],
   "notices": [],
   "sections": [],
-  "updatedAt": "2026-10-19T02:19:11.637Z"
+  "updatedAt": "2026-10-19T08:40:33.549Z"
 }
