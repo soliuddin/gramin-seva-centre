@@ -311,12 +311,24 @@
     void track.offsetWidth; track.style.animation = '';
   }
   /* small notice board in the hero: shown only when there are live notices */
+  /* Notice board in the hero: shows every active notice. With three or more, the notices scroll
+     upward in a loop, like lyrics; they pause while the reader holds or hovers over the board. */
   function renderMini(list) {
-    var box = $('#mini-board'), ul = $('#mini-list'); if (!box || !ul) return;
+    var box = $('#mini-board'), track = $('#mini-track'), cnt = $('#mini-count'); if (!box || !track) return;
     box.hidden = !list.length;
-    ul.innerHTML = list.slice(0, 3).map(function (n) {
-      return '<li class="' + (n.level === 'urgent' ? 'urg' : '') + '">' + esc(pick(n.text, n.textBn)) + '</li>';
-    }).join('');
+    if (cnt) cnt.textContent = String(list.length);
+    if (!list.length) { track.innerHTML = ''; return; }
+    var row = function (n) {
+      var urg = n.level === 'urgent';
+      return '<li class="mb-item' + (urg ? ' urg' : '') + '">' + (urg ? '<span class="mb-tag">' + esc(t('notice_urgent')) + '</span>' : '') +
+        '<span class="mb-text">' + esc(pick(n.text, n.textBn)) + '</span></li>';
+    };
+    var reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var scroll = list.length > 2 && !reduced;
+    var items = list.map(row).join('');
+    box.classList.toggle('scroll', scroll);
+    track.innerHTML = scroll ? items + items : items;
+    track.style.setProperty('--mb-dur', Math.max(14, list.length * 4) + 's');
   }
   function renderNotices() {
     var list = D ? visibleNotices() : [], el = $('#notice'); renderMini(list);
@@ -611,6 +623,20 @@
       if (target) target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
     });
     /* call menus: the header button and the bottom bar button each open Call now / Call back */
+    /* Phone header menu (hamburger): opens the page links; Call now stays in the bottom bar. */
+    var burger = $('#burger'), topnav = $('#top-nav');
+    function setMenu(open) {
+      if (!burger || !topnav) return;
+      topnav.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', String(open));
+      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    }
+    if (burger && topnav) {
+      on(burger, 'click', function (e) { e.stopPropagation(); setMenu(!topnav.classList.contains('open')); });
+      $all('#top-nav a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
+      on(document, 'click', function (e) { if (!e.target.closest || !e.target.closest('#top-nav, #burger')) setMenu(false); });
+      on(document, 'keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
+    }
     var CALL_MENUS = [['#top-call-btn', '#call-menu'], ['#d-call-btn', '#dock-menu']];
     function closeCallMenus(except) {
       CALL_MENUS.forEach(function (x) {
