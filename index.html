@@ -22,7 +22,9 @@
 <script src="assets/theme.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"></noscript>
+<link rel="dns-prefetch" href="https://raw.githubusercontent.com">
 <link rel="stylesheet" href="assets/site.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"LocalBusiness","name":"Gramin Seva Centre","alternateName":"গ্রামীণ সেবা কেন্দ্র","description":"Common Service Centre for Aadhaar, PAN, job forms, scholarships, certificates, banking and printing.","url":"https://soliuddin.github.io/gramin-seva-centre/","address":{"@type":"PostalAddress","addressLocality":"Murshidabad","addressRegion":"West Bengal","postalCode":"742147","addressCountry":"IN"}}
@@ -119,7 +121,10 @@
         <div class="cta">
           <a class="btn primary" href="#rates"><span data-i="cta_rates"></span><svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
           <a class="btn wa" id="cta-wa" target="_blank" rel="noopener" hidden><svg aria-hidden="true"><use href="#i-wa"/></svg><span data-i="cta_wa"></span></a>
-          <a class="btn" id="cta-cb" href="callback.html"><svg aria-hidden="true"><use href="#i-phone"/></svg><span data-i="cta_cb"></span></a>
+        </div>
+        <div class="mini-board" id="mini-board" hidden>
+          <h4 data-i="notices_h"></h4>
+          <ul id="mini-list"></ul>
         </div>
       </div>
       <div class="sign-wrap">
@@ -281,7 +286,6 @@
 </footer>
 
 <div class="fabs">
-  <a class="fab wa" id="fab-wa" target="_blank" rel="noopener" aria-label="WhatsApp" hidden><svg aria-hidden="true"><use href="#i-wa"/></svg></a>
   <button type="button" class="fab up" id="to-top" aria-label="Back to top">
     <svg class="ring" viewBox="0 0 58 58" aria-hidden="true"><circle class="tr" cx="29" cy="29" r="26"/><circle class="pg" cx="29" cy="29" r="26"/></svg>
     <svg class="arr" aria-hidden="true"><use href="#i-up"/></svg>
@@ -289,13 +293,18 @@
 </div>
 
 <nav class="dock" id="dock" aria-label="Quick contact" hidden>
-  <a class="btn primary" id="d-call"><svg aria-hidden="true"><use href="#i-phone"/></svg><span data-i="d_call"></span></a>
+  <div class="callwrap dock-call" id="d-call-wrap" hidden>
+    <button type="button" class="btn primary" id="d-call-btn" aria-haspopup="true" aria-expanded="false" aria-controls="dock-menu"><svg aria-hidden="true"><use href="#i-phone"/></svg><span data-i="d_call"></span></button>
+    <div class="callmenu dock-menu" id="dock-menu" role="menu" hidden>
+      <a role="menuitem" id="d-call" href="#contact"><svg aria-hidden="true"><use href="#i-phone"/></svg><span data-i="d_call"></span></a>
+      <a role="menuitem" href="callback.html"><svg aria-hidden="true"><use href="#i-phone"/></svg><span data-i="cb_fab"></span></a>
+    </div>
+  </div>
   <a class="btn wa" id="d-wa" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg><span>WhatsApp</span></a>
 </nav>
 
 
 </body>
-<script type="module" src="assets/fb.js"></script>
 <script src="assets/site.js" defer></script>
 </body>
 </html>
