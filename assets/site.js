@@ -311,24 +311,43 @@
     void track.offsetWidth; track.style.animation = '';
   }
   /* small notice board in the hero: shown only when there are live notices */
-  /* Notice board in the hero: shows every active notice. With three or more, the notices scroll
-     upward in a loop, like lyrics; they pause while the reader holds or hovers over the board. */
+  /* Notice board (hero): one notice at a time. Each notice rises from below, holds, moves up and out,
+     then the next one comes in, and the list repeats. Holding or touching the board pauses it. */
+  var mbTimer = null, mbBound = false, mbHold = false;
   function renderMini(list) {
     var box = $('#mini-board'), track = $('#mini-track'), cnt = $('#mini-count'); if (!box || !track) return;
+    if (mbTimer) { clearInterval(mbTimer); mbTimer = null; }
     box.hidden = !list.length;
-    if (cnt) cnt.textContent = String(list.length);
-    if (!list.length) { track.innerHTML = ''; return; }
-    var row = function (n) {
+    if (!list.length) { track.innerHTML = ''; if (cnt) cnt.textContent = '0'; return; }
+    track.innerHTML = list.map(function (n) {
       var urg = n.level === 'urgent';
       return '<li class="mb-item' + (urg ? ' urg' : '') + '">' + (urg ? '<span class="mb-tag">' + esc(t('notice_urgent')) + '</span>' : '') +
         '<span class="mb-text">' + esc(pick(n.text, n.textBn)) + '</span></li>';
-    };
-    var reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    var scroll = list.length > 2 && !reduced;
-    var items = list.map(row).join('');
-    box.classList.toggle('scroll', scroll);
-    track.innerHTML = scroll ? items + items : items;
-    track.style.setProperty('--mb-dur', Math.max(14, list.length * 4) + 's');
+    }).join('');
+    var items = $all('#mini-track .mb-item'), cur = 0;
+    function show(i) { if (cnt) cnt.textContent = (i + 1) + ' / ' + items.length; }
+    items[0].classList.add('on');
+    show(0);
+    if (!mbBound) {
+      mbBound = true;
+      on(box, 'pointerenter', function () { mbHold = true; });
+      on(box, 'pointerleave', function () { mbHold = false; });
+      on(box, 'pointerdown', function () { mbHold = true; });
+      on(box, 'pointerup', function () { setTimeout(function () { mbHold = false; }, 1500); });
+    }
+    if (items.length < 2 || reduce) return;
+    mbTimer = setInterval(function () {
+      if (document.hidden || mbHold) return;
+      var prev = items[cur];
+      prev.classList.remove('on'); prev.classList.add('out');
+      cur = (cur + 1) % items.length;
+      var nx = items[cur];
+      nx.style.transition = 'none'; nx.classList.remove('out');
+      void nx.offsetWidth;
+      nx.style.transition = '';
+      nx.classList.add('on');
+      show(cur);
+    }, 4500);
   }
   function renderNotices() {
     var list = D ? visibleNotices() : [], el = $('#notice'); renderMini(list);
@@ -610,6 +629,21 @@
     });
   }
 
+  /* Phone header menu (hamburger). Runs on its own, so an error elsewhere on the page cannot stop it. */
+  function initMenu() {
+    var burger = $('#burger'), topnav = $('#top-nav');
+    if (!burger || !topnav) return;
+    function setMenu(open) {
+      topnav.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', String(open));
+      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    }
+    on(burger, 'click', function (e) { e.stopPropagation(); setMenu(!topnav.classList.contains('open')); });
+    $all('#top-nav a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
+    on(document, 'click', function (e) { if (!e.target.closest || !e.target.closest('#top-nav, #burger')) setMenu(false); });
+    on(document, 'keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
+  }
+
   /* ---------- start ---------- */
   function init() {
     applyStatic();
@@ -623,20 +657,6 @@
       if (target) target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
     });
     /* call menus: the header button and the bottom bar button each open Call now / Call back */
-    /* Phone header menu (hamburger): opens the page links; Call now stays in the bottom bar. */
-    var burger = $('#burger'), topnav = $('#top-nav');
-    function setMenu(open) {
-      if (!burger || !topnav) return;
-      topnav.classList.toggle('open', open);
-      burger.setAttribute('aria-expanded', String(open));
-      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    }
-    if (burger && topnav) {
-      on(burger, 'click', function (e) { e.stopPropagation(); setMenu(!topnav.classList.contains('open')); });
-      $all('#top-nav a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
-      on(document, 'click', function (e) { if (!e.target.closest || !e.target.closest('#top-nav, #burger')) setMenu(false); });
-      on(document, 'keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
-    }
     var CALL_MENUS = [['#top-call-btn', '#call-menu'], ['#d-call-btn', '#dock-menu']];
     function closeCallMenus(except) {
       CALL_MENUS.forEach(function (x) {
@@ -693,5 +713,6 @@
     // Safety net: anything still hidden after 3 seconds is shown, so no section can stay blank.
     setTimeout(function () { $all('.rv').forEach(function (el) { el.classList.add('in'); }); }, 3000);
   }
+  initMenu();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
